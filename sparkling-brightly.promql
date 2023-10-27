@@ -1,2 +1,8 @@
 # This PromQL statement calculates the 90th percentile of container CPU usage over a specific time window and relates it to requested CPU resources in Kubernetes pods. It provides insights into how containers are utilizing CPU resources relative to their requests.
-quantile_over_time(0.9, rate(container_cpu_usage_seconds_total{container!=''}[5m])[24h:5m]) / on (container, pod, namespace) group_left kube_pod_container_resource_requests{resource='cpu'} 
+sum (quantile_over_time(0.9, rate(container_cpu_usage_seconds_total{container!=''}[5m])[14d:5m])) by (container, pod, namespace)
+quantile_over_time(0.9, rate(container_cpu_usage_seconds_total{container!='', namespace!~"openshift-.*|nn-.*"}[5m])[14d:5m]) / on (container, pod, namespace) group_left kube_pod_container_resource_requests{resource='cpu'}
+
+
+
+
+
